@@ -5,7 +5,6 @@
 void deleting(int** mat, size_t created) {
   for (size_t i = 0; i < created; i++) {
     delete[] mat[i];
-
   }
   delete[] mat;
 }
@@ -21,7 +20,7 @@ int** createMatrix(unsigned rows, unsigned columns) {
     }
   } catch (const std::bad_alloc &e) {
     deleting(mat, iter);
-    throw e;
+    throw;
   }
   return mat;
 }
@@ -60,8 +59,6 @@ int main()
   initMatrix(matrix, rows, columns);
   printMatrix(matrix, rows, columns);
   deleting(matrix, rows);
-
-
 
   return 0;
 }
