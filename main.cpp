@@ -1,5 +1,5 @@
 #include <iostream>
-
+#include <thread>
 
 
 void deleting(int** mat, size_t created) {
@@ -8,10 +8,9 @@ void deleting(int** mat, size_t created) {
 
   }
   delete[] mat;
-
 }
 
-int** createMatrix(size_t rows, size_t columns) {
+int** createMatrix(unsigned rows, unsigned columns) {
   int ** mat = new int*[rows];
   size_t iter = 0;
   try {
@@ -22,37 +21,44 @@ int** createMatrix(size_t rows, size_t columns) {
     }
   } catch (const std::bad_alloc &e) {
     deleting(mat, iter);
+    throw e;
   }
   return mat;
 }
 
-
-
-
-int main()
-{
-  int** matrix = nullptr;
-  size_t rows = 0, columns = 0;
-  std::cin >> rows >> columns;
-  try {
-    matrix = createMatrix(rows,columns);
-  } catch (const std::bad_alloc &e) {
-    std::cerr << e.what();
-    return 2;
-  }
+void initMatrix(int** matrix, unsigned rows, unsigned columns) {
   for (size_t i = 0; i < rows;i++) {
     for (size_t j = 0; j < columns; j++) {
       matrix[i][j] = (j+1) * (i+1);
     }
   }
+}
 
+void printMatrix(int** matrix, unsigned rows, unsigned columns) {
   for (int i = 0; i < rows;i++) {
     for (int j = 0; j < columns; j++) {
       std::cout << matrix[i][j] << '\t';
     }
     std::cout << '\n';
   }
+}
 
+int main()
+{
+  int** matrix = nullptr;
+  unsigned int rows = 0, columns = 0;
+
+  std::cin >> rows >> columns;
+
+  try {
+    matrix = createMatrix(rows,columns);
+  } catch (const std::exception &e) {
+    std::cerr << e.what();
+    return 2;
+  }
+
+  initMatrix(matrix, rows, columns);
+  printMatrix(matrix, rows, columns);
   deleting(matrix, rows);
 
 
